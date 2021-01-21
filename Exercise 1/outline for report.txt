@@ -1,0 +1,34 @@
+Motivation (Ivan)
+	- gender inequality, less availability for participation for females
+	- brief history of olympics (from year x to year x, stopped at some point to explain gap) and historic events
+	- what was the pivot for adding more sports for women?
+
+Tasks (Ivan)
+	- explain olympics dataset: years included, number of disciplines and sports, countries, etc
+	- which sports are male dominant? 
+	- how was the ratio of gender participation shifted over time? 
+	- availability of sports over time? 
+	- medals given in each discipline per gender? 
+
+Expressiveness of design (Gio)
+	- light colors with high contrast
+	- order of stacked bars follows legend. sequence of events makes identification easier, can also easily identify null values
+	- overlaid plots (bar and line) have high color contrast (dark and light)
+	- years are sorted increasing
+	- gender follows same order (men folowed by women)
+	- white separation on stacked bar char provides smoother color transition, sense of separation
+	- markers (circles) give spatial mapping to x-axis, and dotted line makes superimposed background easier to see. 
+	- bold labels provide better readibility (x, y, title)
+
+Effectiveness of the solution (Gio)
+	- 
+
+Interaction (Ivan)
+	- explain how each axis can be identified (right and left)
+	- zoom to discriminate small details (i.e. colors, small stacked bars)
+	- hover on bar (talk about metadata)
+	- hover on line (talk about metadata)
+	- zoom anywhere in the plot gives freedom to explore, toolbar at top-right provides features for analysis and further exploration
+
+Conclusions (Gio)
+	-

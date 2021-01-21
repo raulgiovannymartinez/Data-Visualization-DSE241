@@ -1,0 +1,27 @@
+EXERCISE GRADING RUBRIC
+All exercises are graded on scale of 10 points.
+
+Expressiveness of design (30%)
+Match between choices of visual encodings with properties of data.
+Choice of encodings based on the importance of the data.
+How well the design expresses facts?
+
+Effectiveness of the solution (30%)
+Does the solution communicate and support the intended idea?
+Are the encodings used perceptually effective?
+Is the data used comprehensively or augmented?
+
+Interaction support in solution (20%)
+Does the solution support comparison, selection, filtering, linking, etc? For non programmatic solutions this weight is added to expressiveness and effectiveness
+
+Report (20%)
+Does the report provide motivation for the visualization?
+Is there a clear description of the problem/tasks your visualization is attempting to solve?
+Is the choice of visual encodings explained and justified in terms of expressiveness of dataset attributes? Refer Chapter 5.4.1 in Munzner
+Is the choice of visual encoding explained and justified in terms of effectiveness of channels? Refer Chapter 5.4.1 in Munzner
+Finally, does the visualization accomplish solving the problem or tasks that were identified?
+Sample report 1 and Sample report 2 Note: The sample reports are provided merely reference, they should not be used as template for your reports. Do not include improvements section in your report.
+
+Bonus (up to 10%)
+Outstanding submissions may receive up to 10% bonus. Late submissions are not eligible for bonus points.
+Late submission Incurs 20% penalty after the deadline, there after additional 20% penalty per week. Final project must be submitted by deadline (no exceptions).
