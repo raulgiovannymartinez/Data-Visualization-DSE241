@@ -2,10 +2,26 @@ Exercise 2 - Apply color maps
 Apply different color maps to your visualization solution for exercise #1
 
 Note: If your exercise 1 solution does not use color in significant way, you must create a new visualization for exercise 1 data using any tool like d3js, Tableau, etc then perform the following tasks.
-Task 1 - Apply different colormaps for your visualization from Exercise #1
-Use colormaps from colorbrewer2.org. D3 includes built-in support for colorbrewer to be used with scales.
-Task 2 - Take screenshots of your original visualization from Exercise #1. Test them for three common color deficiencies using one of the websites provided here. Rectify any problems encountered by changing colormap.
+
+
+(Ivan) Task 1 - Apply different colormaps for your visualization from Exercise #1. Use colormaps from colorbrewer2.org. D3 includes built-in support for colorbrewer to be used with scales.
+	- Generate different colormaps, 7 categories total (sequential, diverging, qualitative)
+	- sequential, use green colormap
+	- diverting, select the one we like for including on task 2
+	- explain why we picked diverging. there is no qualitative for 7 different categories
+	- Total number of graphs: 3
+
+
+(Raul) Task 2 - Take screenshots of your original visualization from Exercise #1. Test them for three common color deficiencies using one of the websites provided here. Rectify any problems encountered by changing colormap.
 Note: If your original visualization has a single color or simple line plots, create a visualization in Tableau with color and test it for color deficieny
+	- Generate color blind images from original plot (done)
+	- Select and show the colormap that is color blind safe and add to original plot, explain how is better than original
+	- Generate color blind images from diverging applied colors to original
+	- Discuss how new color map is better for color blind users from the original sed in Exercise 1
+	- Total number of graphs: 8 (repeat diverging plot original)
+
+
 Report - Up to 2 pages for individual work and up to 3 pages for group work (additional pages won’t be graded). Discuss how colormap changes affect the effectiveness of visualization. Use side by side (or up and down) images of before and after color deficiency correction in the report. Use multiple images as necessary. Refer to report format
 Code not required for submission.
+
 Due Date - Feb 6, 1am PT Refer to submission instructions
