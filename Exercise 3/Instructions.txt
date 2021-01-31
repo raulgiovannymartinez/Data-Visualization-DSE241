@@ -3,7 +3,9 @@ Develop visualization for a given data.
 
 Data - README, co2-population.csv, co2-population.json, co2-population.xlsx
 Supplemental data (optional) - Geojson for US states, FIPS code for US states. You may also use any other data for augmentation.
+
 Report - Up to 2 pages for individual work and up to 3 pages for group work (additional pages won’t be graded). Describe your visualization. The description must include the problem that your visualization is attempting to solve, the choice of visual elements and interaction. See report format
+
 Tools - Tableau is recommended. However, you may use any programming language or software application for this exercise.
 Tableau files must be submitted in twbx format which bakes in the data in the file itself.
 Due Date - Feb 6, 1am PT Refer to submission instructions

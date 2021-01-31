@@ -1,0 +1,31 @@
+FINAL PROJECT PROPOSAL
+Develop and formally present your proposal for the final project. The goal of the final project is to create/develop compelling visualization solution for a non trivial data set. Following items should be considered for choosing the project
+
+Dataset: Identify and describe a publicly available dataset that will be used for the project. (Dataset must be public - no exceptions will be made)
+Tasks: Specify five tasks that you intend to address with visualization.
+What problems are you trying to solve for the chosen data?
+Is visualization meant for data exploration, hypothesis confirmation or presentation?
+What data transformation needs to be undertaken to work with the data? Carefully choose your data so you don’t spend enormous amount of time with data wrangling.
+What are the use case scenarios?
+How: How will the visualization solution be implemented?
+You may include sketches or concept diagrams.
+Include interaction capabilities that will be useful for your solution. For example: Zoom, Filtering, Sorting, Etc.
+Programming dominant - The solution will be implemented using a specific programming library for e.g bokeh, d3js, etc.
+Application dominant - The solution will use a visualization application for e.g. Tableau, VisIt, etc. Some scripting may be done for data translation, etc. Since this work will likely take less effort than programming dominant solution. Literature survey is not needed for the final project proposal.
+Good sources for literature survey
+References in the textbook
+Keyvis.org - Search papers with keywords. For e.g. search for time-series data
+TVCG - IEEE Transactions on Visualization and Computer Graphics . These proceedings include the papers presented at the IEEE Visualization conference (Gold standard)
+CG&A - IEEE Computer Graphics and Applications
+Euro Vis
+Eurographics Symposium on Parallel Graphics and Visualization
+Blogs should not be included in the literature survey
+Who: Who are the stake holders (for e.g. public or analysts)
+
+Final proposal submission
+Up to six slides in PDF/Powerpoint format (no exceptions). You may include sketches or concept diagrams in the submission document.
+You will present your proposal in class. Up to 8 minutes for presentation, 3 minute for discussion and change to next student.
+Presentation will be graded based on requirements above on a scale of 10 points.
+Presentation order TBD is be randomly generated and posted
+Note your final project proposal team/individual
+Due Date - Feb 6, 1am PT
