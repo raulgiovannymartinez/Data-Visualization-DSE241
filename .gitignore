@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# data from final project
+Final Project/dash_plotly_code/data/*
+Final Project/dash_plotly_code/example/data/*
+
+
