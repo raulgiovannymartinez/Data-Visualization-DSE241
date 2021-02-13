@@ -1,0 +1,11 @@
+Exercise 4 - Visualize a Network
+Create a visualization of the provided sheep data. You may create either an adjacency matrix visualization, or a node-link visualization.
+
+Data - sheep_data.zip, sheep_ml.graphml
+Tools - Python NetworkX reccomended, D3 force layout may also be used (for node-link visualization).
+Report - Up to 3 pages (anything beyond three pages will not be graded). Discuss the expressiveness and effectiveness of your chosen visual idiom. Describe any findings that can be identified or learned from the visualization. See report format
+Notes - The edge weights are non-symmetric, meaning that the network has directed edges. You are NOT required to visualize the weights on both directions of each edge as this can get very complicated (specifically with node-link visualizations). You are allowed to simply pick one value for each edge.
+Grading - Since implementing interativity with NetworkX solutions is a significant challenge, for NetworkX solutions without interactivity, interactivity points will be awarded in one of two ways:
+If the data is augmented (i.e. extra properties of the data are computed and used for visualization) the interactivity portion of the grade will be assigned to the expressiveness and effectiveness of the visualization of this augmentation (please also discuss the augmentation in your report).
+Otherwise, the interactivity points will be evenly split between the effectiveness and report sections (making them 40% and 30% respectively). This means if you choose not to use interactivity or augmentation, please put extra attention into your report and the justification of the effectiveness of the choices you made in your visualization.
+Due Date - Feb 20th, 1am PT Refer to submission instructions
