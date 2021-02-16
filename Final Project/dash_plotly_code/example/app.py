@@ -61,6 +61,8 @@ BINS = [
     ">30",
 ]
 
+
+
 DEFAULT_COLORSCALE = [
     "#f2fffb",
     "#bbffeb",
