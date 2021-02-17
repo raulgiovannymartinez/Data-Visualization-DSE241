@@ -312,7 +312,7 @@ p {
     margin-top: 0;
 }
 
-#heatmap-title {
+#heatmap-title, #heatmap-title2 {
     font-family: "Playfair Display", sans-serif;
     font-size: 2rem;
 }
@@ -334,18 +334,6 @@ p {
     margin-bottom: 2rem !important;
     font-size: 2rem;
 }
-
-
-@media only screen and (max-width: 550px) {
-    .rc-slider-mark-text {
-        font-size: 50%;
-    }
-
-    #description {
-        font-size: 1rem;
-    }
-}
-
 
 /* Blockquotes
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -381,7 +369,7 @@ input[type="button"] {
     display: inline-block;
     height: 38px;
     padding: 0 30px;
-    color: #555;
+    color: #7fafdf;
     text-align: center;
     font-size: 11px;
     font-weight: 600;
@@ -392,7 +380,7 @@ input[type="button"] {
     white-space: nowrap;
     background-color: transparent;
     border-radius: 4px;
-    border: 1px solid #bbb;
+    border: 1px solid #7fafdf;
     cursor: pointer;
     box-sizing: border-box;
 }
@@ -407,8 +395,8 @@ button:focus,
 input[type="submit"]:focus,
 input[type="reset"]:focus,
 input[type="button"]:focus {
-    color: #333;
-    border-color: #888;
+    color: #7fafdf;
+    border-color: #7fafdf;
     outline: 0;
 }
 
@@ -417,7 +405,7 @@ button.button-primary,
 input[type="submit"].button-primary,
 input[type="reset"].button-primary,
 input[type="button"].button-primary {
-    color: #FFF;
+    color: #7fafdf;
     background-color: #33C3F0;
     border-color: #33C3F0;
 }
@@ -432,7 +420,7 @@ button.button-primary:focus,
 input[type="submit"].button-primary:focus,
 input[type="reset"].button-primary:focus,
 input[type="button"].button-primary:focus {
-    color: #FFF;
+    color: #7fafdf;
     background-color: #1EAEDB;
     border-color: #1EAEDB;
 }
@@ -451,8 +439,8 @@ textarea,
 select {
     height: 38px;
     padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
-    background-color: #fff;
-    border: 1px solid #D1D1D1;
+    background-color: #252e3f;
+    border: 1px solid #252e3f;
     border-radius: 4px;
     box-shadow: none;
     box-sizing: border-box;
@@ -639,38 +627,82 @@ hr {
     clear: both;
 }
 
-/* Slider
+/* Controls
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
-#slider-container {
+#controls-container {
     background-color: #252e3f;
     padding: 2rem 6rem 4rem 4rem;
     height: 8rem;
 }
 
-.rc-slider-dot-active, .rc-slider-handle {
-    border-color: #2cfec1 !important;
+.DateInput_input {
+    color: #7fafdf;
+    opacity: 1;
 }
 
-.rc-slider-track {
-    background-color: #2cfec1 !important
-}
+/* .CalendarDay {
+    border: 1px solid #E1E1E1;
+    padding: 0;
+    box-sizing: border-box;
+    color: #7fafdf;
+    background: #252e3f;
+    cursor: pointer; } */
 
-.rc-slider-rail {
-    background-color: #1d2731 !important
-}
+/* .CalendarMonthGrid {
+    background: #252e3f;
+    z-index: 0;
+    text-align: left; } */
+
+/* .DateRangePicker__picker {
+    z-index: 1;
+    background-color: red;
+    position: absolute;
+    top: 72px; }
+*/ 
+
+
+/* .CalendarDay--selected-start,
+.CalendarDay--selected-end,
+.CalendarDay--selected {
+    background: #70d1ff;
+    border: 1px double #70d1ff;
+    color: #fff; }
+    .CalendarDay--selected-start:active,
+    .CalendarDay--selected-end:active,
+    .CalendarDay--selected:active {
+    background: #70d1ff; }  */
+
+/* .CalendarMonthGrid {
+    background: #252e3f;
+    color: red;
+    z-index: 0;
+    text-align: left; } */
+
+/* .DateInput {
+    background: #252e3f;
+    color: red;
+}  */
+
+ .DateRangePickerInput {
+    background-color: #252e3f;
+    border: 1px solid #E1E1E1;
+    display: inline-block; 
+    background: #E1E1E1;
+} 
 
 /* Heatmap
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-#heatmap-container {
+#heatmap-container, #heatmap-container2 {
     margin: 2.5rem 0 0 0;
     background-color: #252e3f;
 }
 
-#heatmap-title {
+#heatmap-title, #heatmap-title2 {
     margin: 0;
     padding: 1rem;
 }
+
 
 #county-choropleth {
     margin: 0;
@@ -678,7 +710,7 @@ hr {
 }
 
 @media (min-width: 1251px) {
-    #heatmap-container {
+    #heatmap-container, #heatmap-container2 {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
@@ -798,7 +830,7 @@ hr {
 }
 
 .Select-menu-outer {
-    background-color: #252e3f !important;
+    background-color: #7fafdf !important;
     border: 1px solid #7fafdf !important;
 }
 
@@ -807,7 +839,7 @@ hr {
 }
 
 .Select-menu-outer div:hover {
-    background-color: rgba(255, 255, 255, 0.01) !important;
+    background-color: #7fafdf !important;
     cursor: pointer;
 }
 
