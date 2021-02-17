@@ -389,13 +389,15 @@ def display_correlation_plot(data, metric):
 @app.callback(
     Output("timeseries-plot", "figure"),
     [
-        Input("state-options", "value"),
-        Input('metric-select', 'value'),
         Input('submit-val', 'n_clicks')
     ],
-    [State('moving-average-window', 'value')]
+    [
+        State('metric-select', 'value'),
+        State('moving-average-window', 'value'),
+        State("state-options", "value")
+    ]
 )
-def display_timeseries_plot(states_list, metric, n_clicks, ma_window_size):
+def display_timeseries_plot(n_clicks, metric, ma_window_size, states_list):
     if not df_data.empty and n_clicks != 0 and ma_window_size != None:
         
         dff = df_data.merge(pd.DataFrame({'State':states_list}), how='inner')
@@ -419,9 +421,7 @@ def display_timeseries_plot(states_list, metric, n_clicks, ma_window_size):
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
                 paper_bgcolor= 'rgba(0, 0, 0, 0)'
             )
-        
-        n_clicks = 0
-        
+                
         return fig
 
     else:
