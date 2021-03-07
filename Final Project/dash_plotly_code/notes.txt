@@ -1,0 +1,9 @@
+- update color scale on map to be consisent with min max vaues on data
+- radioation image
+- colors and font size
+- default value in timescale for california
+- titles for figures
+- html text explaining the dashbaord
+- moving average background and font to match 
+- add moving average default value and per hr text
+- test loading of data and identify slower step

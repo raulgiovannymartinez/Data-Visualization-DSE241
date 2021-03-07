@@ -27,10 +27,10 @@ server = app.server
 
 APP_PATH = str(pathlib.Path(__file__).parent.resolve())
 
-df_data = pd.read_pickle(join(APP_PATH, join('data', 'data_test.pkl'))) 
-df_coord = pd.read_pickle(join(APP_PATH, join('data', 'coordinates_test.pkl'))) 
+df_data = pd.read_pickle(join(APP_PATH, join('data', 'data.pkl'))) 
+df_coord = pd.read_pickle(join(APP_PATH, join('data', 'coordinates.pkl'))) 
 
-end_date = max(df_data.Time)
+end_date = df_data.Time.max()
 start_date = end_date - relativedelta(years=1)
 
 
@@ -57,8 +57,8 @@ def main_title_buttons():
                                 start_date_placeholder_text="Start Period",
                                 end_date_placeholder_text="End Period",
                                 calendar_orientation='vertical',
-                                min_date_allowed=min(df_data.Time),
-                                max_date_allowed=max(df_data.Time),
+                                min_date_allowed=df_data.Time.min(),
+                                max_date_allowed=df_data.Time.max(),
                                 start_date=start_date,
                                 end_date=end_date,
                                 day_size=45,
@@ -98,6 +98,9 @@ def main_title_buttons():
     ])
 
 
+init_ca_cities = ['ANAHEIM', 'BAKERSFIELD', 'EUREKA', 'FRESNO', 'LOS ANGELES',
+                'RIVERSIDE', 'SACRAMENTO', 'SAN BERNARDINO', 'SAN DIEGO',
+                'SAN FRANCISCO', 'SAN JOSE']
 # timeseries analysis buttons
 def timeseries_title_buttons():
     return html.Div([
@@ -116,17 +119,32 @@ def timeseries_title_buttons():
                             html.H6('Select States:'),
                             dcc.Dropdown(
                                 id="state-options",
-                                options=[{'label': i, 'value': i} for i in set(df_data.State)],
+                                options=[{'label': i, 'value': i} for i in df_data.State.unique()],
                                 multi=True,
-                                value=['CA', 'NY'],
+                                value=['CA'],
                                 searchable=True
                             )  
-                        ], className="six columns"),
+                        ], className="four columns"),
+                        html.Div([
+                            html.H6('Select Cities:'),
+                            dcc.Dropdown(
+                                id="city-options",
+                                multi=True,
+                                options=[{'label': i, 'value': i} for i in init_ca_cities],
+                                value=['LOS ANGELES','SAN DIEGO','ANAHEIM', 'SAN JOSE', 'BAKERSFIELD'],
+                                searchable=True
+                            )  
+                        ], className="four columns"),
                         html.Div([
                             html.H6('Moving Average Window Size:'),
                             html.Div(
                                 children=[
-                                    dcc.Input(id='moving-average-window', type='text', style={"margin-right": "15px"}),
+                                    dcc.Input(
+                                        id='moving-average-window', 
+                                        type='text', 
+                                        style={"margin-right": "15px"}, 
+                                        value='24'
+                                    ),
                                     html.Button('Run', id='submit-val', n_clicks=0)
                                 ]
                             )
@@ -254,6 +272,26 @@ app.layout = html.Div([
 
 
 # callback functions
+@app.callback(
+    Output("city-options", "options"),
+    [
+        Input("agg-df", "children"),
+        Input('metric-select', 'value'),
+        Input('state-options', 'value')
+    ]
+)
+def update_city_options(data, metric, states_list):
+    if data:
+        
+        dff = pd.read_json(data, orient='split')
+        dff = dff.dropna(subset=[metric])
+        dff = dff.merge(pd.DataFrame({'State':states_list}), how='inner')
+        
+        return [{'label': i, 'value': i} for i in dff.City.unique()] 
+
+    else:
+        raise PreventUpdate
+
 
 @app.callback(
     Output("map-plot", "figure"),
@@ -271,8 +309,8 @@ def display_map_plot(data, metric, groupby_value):
         dff = dff.dropna(subset=[metric])
         
         if dff.empty: raise PreventUpdate
-        
-        fig = px.scatter_geo(dff, color=metric, size=metric,
+                
+        fig = px.scatter_geo(dff, color=metric, size=metric, range_color=[dff[metric].min(), dff[metric].max()],
                             lat = 'lat', lon = 'lng', animation_frame = groupby_value)
 
         fig.update_layout(
@@ -392,15 +430,21 @@ def display_correlation_plot(data, metric):
         Input('submit-val', 'n_clicks')
     ],
     [
+        State('date-range', 'start_date'),
+        State('date-range', 'end_date'),
         State('metric-select', 'value'),
         State('moving-average-window', 'value'),
-        State("state-options", "value")
+        State("state-options", "value"),
+        State("city-options", "value")
     ]
 )
-def display_timeseries_plot(n_clicks, metric, ma_window_size, states_list):
-    if not df_data.empty and n_clicks != 0 and ma_window_size != None:
-        
+def display_timeseries_plot(n_clicks, start_date, end_date, metric, ma_window_size, states_list, cities_list):
+    # if not df_data.empty and n_clicks != 0 and ma_window_size != None:
+    if not df_data.empty and ma_window_size != None:
+
         dff = df_data.merge(pd.DataFrame({'State':states_list}), how='inner')
+        dff = df_data.merge(pd.DataFrame({'City':cities_list}), how='inner')
+        dff = dff.loc[(dff.Time > start_date) & (dff.Time <= end_date)]
         
         # when input is not an integer and no states records match
         if not ma_window_size.isdigit() or len(dff)==0: 
@@ -439,9 +483,10 @@ def display_timeseries_plot(n_clicks, metric, ma_window_size, states_list):
 def get_agg_df(start_date, end_date, groupby_value):
 
     dff = df_data.loc[(df_data.Time > start_date) & (df_data.Time <= end_date)]
-    dff[groupby_value] = [getattr(i, groupby_value) for i in dff.Time] 
     
-    cols = ['State', 'City', groupby_value]    
+    dff[groupby_value] = getattr(dff.Time.dt, groupby_value)
+    
+    cols = ['State', 'City', groupby_value]   
     dff = dff.groupby(cols, as_index=False)['Dose_Rate', 'Gamma_Count'].median()
 
     return merge_coordinates(dff).to_json(date_format='iso', orient='split')
