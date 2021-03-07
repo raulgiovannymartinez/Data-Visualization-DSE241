@@ -43,15 +43,24 @@ def main_title_buttons():
             dbc.CardBody([
                 html.Div([
                     html.Div([
-                        html.H4(children="Rate of US Poison-Induced Deaths"),
-                        html.P(
-                            children="Deaths are classified using the International Classification of Diseases, \
-                            Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
-                            cause-of-death codes X40–X44 (unintentional), X60–X64 (suicide), X85 (homicide), or Y10–Y14 \
-                            (undetermined intent).",
-                        ),
                         html.Div([
-                            html.H6('Select Date Range:'),
+                            html.H1(children="Rate of US Poison-Induced Deaths"),
+                            html.P(
+                                children="Deaths are classified using the International Classification of Diseases, \
+                                Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
+                                cause-of-death codes X40–X44 (unintentional), X60–X64 (suicide), X85 (homicide), or Y10–Y14 \
+                                (undetermined intent)."),
+                            html.P(
+                                children="Deaths are classified using the International Classification of Diseases, \
+                                Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
+                                cause-of-death codes X40–X44 (unintentional), X60–X64 (suicide), X85 (homicide), or Y10–Y14 \
+                                (undetermined intent)."),
+                        ], className="ten columns"),
+                        html.Div([
+                            html.Img(id="logo", src=app.get_asset_url("radiation_logo.png")),
+                        ], className="two columns", style={'margin-left': '4%'}),
+                        html.Div([
+                            html.P('Select Date Range:'),
                             dcc.DatePickerRange(
                                 id='date-range',
                                 start_date_placeholder_text="Start Period",
@@ -63,9 +72,9 @@ def main_title_buttons():
                                 end_date=end_date,
                                 day_size=45,
                             )
-                        ], className="four columns"),
+                        ], style={'width': '21%', 'margin-left': '4%'}),
                         html.Div([
-                            html.H6('Group By:'),
+                            html.P('Group By:'),
                             dcc.Dropdown(
                                 id="group-by",
                                 options=[
@@ -79,7 +88,7 @@ def main_title_buttons():
                             )  
                         ], className="two columns"),
                         html.Div([
-                            html.H6('Select Metric:'),
+                            html.P('Select Metric:'),
                             dcc.Dropdown(
                                 id="metric-select",
                                 options=[
@@ -108,7 +117,7 @@ def timeseries_title_buttons():
             dbc.CardBody([
                 html.Div([
                     html.Div([
-                        html.H4(children="Rate of US Poison-Induced Deaths"),
+                        html.H1(children="Rate of US Poison-Induced Deaths"),
                         html.P(
                             children="Deaths are classified using the International Classification of Diseases, \
                             Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
@@ -116,7 +125,7 @@ def timeseries_title_buttons():
                             (undetermined intent).",
                         ),
                         html.Div([
-                            html.H6('Select States:'),
+                            html.P('Select States:'),
                             dcc.Dropdown(
                                 id="state-options",
                                 options=[{'label': i, 'value': i} for i in df_data.State.unique()],
@@ -124,9 +133,9 @@ def timeseries_title_buttons():
                                 value=['CA'],
                                 searchable=True
                             )  
-                        ], className="four columns"),
+                        ], className="three columns"),
                         html.Div([
-                            html.H6('Select Cities:'),
+                            html.P('Select Cities:'),
                             dcc.Dropdown(
                                 id="city-options",
                                 multi=True,
@@ -136,7 +145,7 @@ def timeseries_title_buttons():
                             )  
                         ], className="four columns"),
                         html.Div([
-                            html.H6('Moving Average Window Size:'),
+                            html.P('Moving Average Window Size:'),
                             html.Div(
                                 children=[
                                     dcc.Input(
@@ -212,18 +221,6 @@ def bar_plot():
             ]), 
         ),  
     ])
-    
-def display_logo():
-    return html.Div([
-        dbc.Card(
-            dbc.CardBody([
-                html.Div([
-                    html.Img(id="logo", src=app.get_asset_url("dash-logo.png")),
-                ], style={'margin': '30px'}) 
-            ])
-        ),
-    ])
-
 
 
 # App layout
@@ -234,10 +231,7 @@ app.layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     main_title_buttons()
-                ], width=9),
-                dbc.Col([
-                    display_logo()
-                ], width=3),
+                ], width=12),
             ], align='center'), 
             html.Br(),
             dbc.Row([
@@ -311,9 +305,11 @@ def display_map_plot(data, metric, groupby_value):
         if dff.empty: raise PreventUpdate
                 
         fig = px.scatter_geo(dff, color=metric, size=metric, range_color=[dff[metric].min(), dff[metric].max()],
-                            lat = 'lat', lon = 'lng', animation_frame = groupby_value)
+                            lat = 'lat', lon = 'lng', animation_frame = groupby_value, color_continuous_scale='rdylgn_r',
+                            hover_data=['State','City'])
 
         fig.update_layout(
+                font_color='#f7cc00',
                 height=600,
                 margin={"r":5,"t":5,"l":5,"b":5},
                 template='plotly_dark',
@@ -323,7 +319,7 @@ def display_map_plot(data, metric, groupby_value):
                     scope = 'usa',
                     landcolor = 'rgb(217, 217, 217)',
                 )
-            )
+        )
         
         return fig
     else:
@@ -341,19 +337,25 @@ def display_bar_plot(data, metric):
     if data:
         
         dff = pd.read_json(data, orient='split')
-        dff = dff.dropna(subset=[metric]).groupby(['City'])[metric].median().sort_values(ascending=True).reset_index()
+        dff = dff.dropna(subset=[metric]).groupby(['City', 'State'])[metric].median()
+        dff = dff.reset_index().sort_values(by=['State', metric], ascending=[False, True])
         
         if dff.empty: raise PreventUpdate
 
-        fig = px.bar(dff, x=metric, y="City", orientation='h', title = 'add title')
+        fig = px.bar(dff, x=metric, y="City", orientation='h', title = '<b> add title </b>', color='State')
 
         fig.update_layout(
+                legend_traceorder="reversed",
+                font_color='#f7cc00',
                 height=600,
                 margin={"r":50,"t":50,"l":50,"b":50},
                 template='plotly_dark',
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
                 paper_bgcolor= 'rgba(0, 0, 0, 0)'
-            )
+        )
+        
+        fig.update_xaxes(gridcolor='#696969')
+        fig.update_yaxes(showgrid=False)
         
         return fig
     else:
@@ -378,13 +380,14 @@ def display_treemap_plot(data, metric):
         
         if dff.empty: raise PreventUpdate
         
-        fig = px.treemap(dff, path=['State', 'City'], values=metric, color=metric, title = 'add title')
+        fig = px.treemap(dff, path=['State', 'City'], values=metric, color=metric, title = '<b> add title </b>')
 
         fig.update_layout(
+                font_color='#f7cc00',
                 height=400,
                 margin={"r":50,"t":50,"l":50,"b":50},
                 template='plotly_dark'
-            )
+        )
         
         return fig
     else:
@@ -408,16 +411,22 @@ def display_correlation_plot(data, metric):
         
         dff = dff.groupby(['City','State','Elevation'], as_index=False)[metric].median()
         
-        fig = px.scatter(dff, x=metric, y='Elevation', marginal_y="box", title = 'add title',
+        fig = px.scatter(dff, x=metric, y='Elevation', marginal_y="box", title = '<b> add title </b>',
                         marginal_x="box", template="simple_white", hover_data=['City'])
 
         fig.update_layout(
+                font_color='#f7cc00',
                 height=400,
                 margin={"r":50,"t":50,"l":50,"b":50},
                 template='plotly_dark',
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
                 paper_bgcolor= 'rgba(0, 0, 0, 0)'
-            )
+        )
+        
+        fig.update_traces(marker={'color':'#f7cc00', 'size':10, 'line':{'color':'#808080', 'width':1.5}})
+        
+        fig.update_xaxes(zeroline=True, zerolinecolor='#696969', showgrid=False)
+        fig.update_yaxes(zeroline=True, zerolinecolor='#696969', showgrid=False)
         
         return fig
     else:
@@ -455,16 +464,19 @@ def display_timeseries_plot(n_clicks, start_date, end_date, metric, ma_window_si
         
         dff = dff.dropna(subset=[metric])
         
-        fig = px.line(dff, x='Time', y=metric, title='Time Series with Range Slider and Selectors',
-                    hover_name="State", color='City')
+        fig = px.line(dff, x='Time', y=metric, title='<b> add title </b>', hover_name="State", color='City')
 
         fig.update_layout(
+                font_color='#f7cc00',
                 height=500,
                 margin={"r":50,"t":50,"l":50,"b":50},
                 template='plotly_dark',
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
                 paper_bgcolor= 'rgba(0, 0, 0, 0)'
-            )
+        )
+        
+        fig.update_xaxes(showgrid=False)
+        fig.update_yaxes(gridcolor='#696969')
                 
         return fig
 
