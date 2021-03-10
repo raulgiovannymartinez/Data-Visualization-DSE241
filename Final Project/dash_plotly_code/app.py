@@ -375,12 +375,13 @@ def display_treemap_plot(data, metric):
         dff = pd.read_json(data, orient='split')
         
         dff = dff.dropna(subset=[metric])
-        
+                
         dff = dff.groupby(['State', 'City', 'Elevation'], as_index=False)[metric].median()
-        
+                
         if dff.empty: raise PreventUpdate
-        
-        fig = px.treemap(dff, path=['State', 'City'], values=metric, color=metric, title = '<b> add title </b>')
+                        
+        dff['US'] = 'US' 
+        fig = px.treemap(dff, path=['US', 'State', 'City'], values=metric, color=metric, title = '<b> add title </b>')
 
         fig.update_layout(
                 font_color='#f7cc00',
