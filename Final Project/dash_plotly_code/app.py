@@ -99,7 +99,7 @@ def main_title_buttons():
                                 clearable=False,
                                 value='Dose_Rate'
                             )  
-                        ], className="two columns")
+                        ], style={'width': '18%', 'margin-left': '5%'})
                     ], className="row"),
                 ], style={'textAlign': 'left', 'margin': '30px'}) 
             ])
