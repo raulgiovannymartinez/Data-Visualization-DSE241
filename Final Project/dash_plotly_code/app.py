@@ -44,17 +44,16 @@ def main_title_buttons():
                 html.Div([
                     html.Div([
                         html.Div([
-                            html.H1(children="Rate of US Poison-Induced Deaths"),
+                            html.H1(children="Environmental Radiation Monitoring in the US"),
                             html.P(
-                                children="Deaths are classified using the International Classification of Diseases, \
-                                Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
-                                cause-of-death codes X40–X44 (unintentional), X60–X64 (suicide), X85 (homicide), or Y10–Y14 \
-                                (undetermined intent)."),
+                                children="This dashboard has been created to serve as a platform for radiation monitoring data exploration. \
+                                All data can be obtained directly from United States Environmental Protection Agency (EPA). \
+                                    Web Link: https://www.epa.gov/radnet/radnet-csv-file-downloads"),
                             html.P(
-                                children="Deaths are classified using the International Classification of Diseases, \
-                                Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
-                                cause-of-death codes X40–X44 (unintentional), X60–X64 (suicide), X85 (homicide), or Y10–Y14 \
-                                (undetermined intent)."),
+                                children="All of the data presented here is part of the EPA's RadNet program. The RadNet program monitors \
+                                    environmental radiation in air, rain, and drinkin water. Scientist can and have used this information \
+                                        to track variations in background radiation, atmospheric nuclear weapons, and nuclear reactor accidents."),
+                            html.P('Hello world'),
                         ], className="ten columns"),
                         html.Div([
                             html.Img(id="logo", src=app.get_asset_url("radiation_logo.png")),
@@ -88,12 +87,12 @@ def main_title_buttons():
                             )  
                         ], className="two columns"),
                         html.Div([
-                            html.P('Select Metric:'),
+                            html.P('Select Radiation Metric:'),
                             dcc.Dropdown(
                                 id="metric-select",
                                 options=[
-                                    {'label': 'Dose Rate', 'value': 'Dose_Rate'},
-                                    {'label': 'Gamma Count', 'value': 'Gamma_Count'}
+                                    {'label': 'Dose Rate [nSv/h]', 'value': 'Dose_Rate'},
+                                    {'label': 'Gamma Count Rate [cpm]', 'value': 'Gamma_Count'}
                                 ],
                                 multi=False,
                                 clearable=False,
@@ -117,7 +116,7 @@ def timeseries_title_buttons():
             dbc.CardBody([
                 html.Div([
                     html.Div([
-                        html.H1(children="Rate of US Poison-Induced Deaths"),
+                        html.H1(children="Radiation Monitoring Time"),
                         html.P(
                             children="Deaths are classified using the International Classification of Diseases, \
                             Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
@@ -145,7 +144,7 @@ def timeseries_title_buttons():
                             )  
                         ], className="four columns"),
                         html.Div([
-                            html.P('Moving Average Window Size:'),
+                            html.P('Moving Average Window Size [hours]:'),
                             html.Div(
                                 children=[
                                     dcc.Input(
@@ -154,7 +153,7 @@ def timeseries_title_buttons():
                                         style={"margin-right": "15px"}, 
                                         value='24'
                                     ),
-                                    html.Button('Run', id='submit-val', n_clicks=0)
+                                    html.Button('Plot', id='submit-val', n_clicks=0)
                                 ]
                             )
                         ], className="three columns")
@@ -298,6 +297,8 @@ def update_city_options(data, metric, states_list):
 def display_map_plot(data, metric, groupby_value):
     if data:
         
+        xaxis = 'Dose Rate [nSv/h]' if metric == 'Dose_Rate' else 'Gamma Count Rate [cpm]'
+
         dff = pd.read_json(data, orient='split')
         
         dff = dff.dropna(subset=[metric])
@@ -305,7 +306,7 @@ def display_map_plot(data, metric, groupby_value):
         if dff.empty: raise PreventUpdate
                 
         fig = px.scatter_geo(dff, color=metric, size=metric, range_color=[dff[metric].min(), dff[metric].max()],
-                            lat = 'lat', lon = 'lng', animation_frame = groupby_value, color_continuous_scale='rdylgn_r',
+                            lat = 'lat', lon = 'lng', animation_frame = groupby_value, color_continuous_scale='bluered',
                             hover_data=['State','City'])
 
         fig.update_layout(
@@ -335,6 +336,8 @@ def display_map_plot(data, metric, groupby_value):
 )
 def display_bar_plot(data, metric):
     if data:
+
+        xaxis = 'Dose Rate [nSv/h]' if metric == 'Dose_Rate' else 'Gamma Count Rate [cpm]'
         
         dff = pd.read_json(data, orient='split')
         dff = dff.dropna(subset=[metric]).groupby(['City', 'State'])[metric].median()
@@ -342,7 +345,7 @@ def display_bar_plot(data, metric):
         
         if dff.empty: raise PreventUpdate
 
-        fig = px.bar(dff, x=metric, y="City", orientation='h', title = '<b> add title </b>', color='State')
+        fig = px.bar(dff, x=metric, y="City", orientation='h', title = '<b>Gamma Radiation Metrics by City and State</b>', color='State')
 
         fig.update_layout(
                 legend_traceorder="reversed",
@@ -351,7 +354,9 @@ def display_bar_plot(data, metric):
                 margin={"r":50,"t":50,"l":50,"b":50},
                 template='plotly_dark',
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
-                paper_bgcolor= 'rgba(0, 0, 0, 0)'
+                paper_bgcolor= 'rgba(0, 0, 0, 0)',
+                xaxis_title= xaxis,
+                
         )
         
         fig.update_xaxes(gridcolor='#696969')
@@ -372,6 +377,8 @@ def display_bar_plot(data, metric):
 def display_treemap_plot(data, metric):
     if data:
         
+        #leg = 'Dose Rate [nSv/h]' if metric == 'Dose_Rate' else 'Gamma Count Rate [cpm]'
+
         dff = pd.read_json(data, orient='split')
         
         dff = dff.dropna(subset=[metric])
@@ -380,14 +387,17 @@ def display_treemap_plot(data, metric):
                 
         if dff.empty: raise PreventUpdate
                         
-        dff['US'] = 'US' 
-        fig = px.treemap(dff, path=['US', 'State', 'City'], values=metric, color=metric, title = '<b> add title </b>')
+        #dff['US'] = 'US' 
+        #fig = px.treemap(dff, path=['US', 'State', 'City'], values=metric, color=metric, title = '<b> add title </b>')
+        fig = px.treemap(dff, path=['State', 'City'], values=metric, color=metric, title = '<b> Radiation Sensor Distribution Across All States</b>')
 
         fig.update_layout(
+            
                 font_color='#f7cc00',
                 height=400,
                 margin={"r":50,"t":50,"l":50,"b":50},
-                template='plotly_dark'
+                template='plotly_dark',
+                
         )
         
         return fig
@@ -405,6 +415,8 @@ def display_treemap_plot(data, metric):
 def display_correlation_plot(data, metric):
     if data:
         
+        xaxis = 'Dose Rate [nSv/h]' if metric == 'Dose_Rate' else 'Gamma Count Rate [cpm]'
+
         dff = pd.read_json(data, orient='split')
         if dff.empty: raise PreventUpdate
         
@@ -412,7 +424,7 @@ def display_correlation_plot(data, metric):
         
         dff = dff.groupby(['City','State','Elevation'], as_index=False)[metric].median()
         
-        fig = px.scatter(dff, x=metric, y='Elevation', marginal_y="box", title = '<b> add title </b>',
+        fig = px.scatter(dff, x=metric, y='Elevation', marginal_y="box", title = '<b> City Elevation vs Gamma Metric </b>',
                         marginal_x="box", template="simple_white", hover_data=['City'])
 
         fig.update_layout(
@@ -421,7 +433,10 @@ def display_correlation_plot(data, metric):
                 margin={"r":50,"t":50,"l":50,"b":50},
                 template='plotly_dark',
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
-                paper_bgcolor= 'rgba(0, 0, 0, 0)'
+                paper_bgcolor= 'rgba(0, 0, 0, 0)',
+                xaxis_title= xaxis,
+                yaxis_title='Elevation [m]'
+          
         )
         
         fig.update_traces(marker={'color':'#f7cc00', 'size':10, 'line':{'color':'#808080', 'width':1.5}})

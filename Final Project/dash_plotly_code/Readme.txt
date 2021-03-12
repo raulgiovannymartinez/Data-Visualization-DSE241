@@ -24,3 +24,17 @@ pandas                    1.0.3
 plotly                    4.7.1      
 python                    3.7.9      
 python-dateutil           2.8.1      
+
+
+The following instructions were tested using an anaconda environment.
+STEP1	Execute the following command to create new anaconda environment called "py379" with python version 3.7.9:
+
+	conda create -n py379 python=3.7.9
+
+STEP2	Activate the new environment:
+
+	conda activate py379
+
+STEP3 Execute the following command to install all required dependencies.
+	
+	pip install -r requirements.txt
