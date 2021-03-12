@@ -53,7 +53,8 @@ def main_title_buttons():
                                 children="All of the data presented here is part of the EPA's RadNet program. The RadNet program monitors \
                                     environmental radiation in air, rain, and drinkin water. Scientist can and have used this information \
                                         to track variations in background radiation, atmospheric nuclear weapons, and nuclear reactor accidents."),
-                            html.P('Hello world'),
+                            html.P('Information presented in this map is grouped by the selecion on the "Group By" option. The map and charts will \
+                                    updata accordin'),
                         ], className="ten columns"),
                         html.Div([
                             html.Img(id="logo", src=app.get_asset_url("radiation_logo.png")),
@@ -377,7 +378,7 @@ def display_bar_plot(data, metric):
 def display_treemap_plot(data, metric):
     if data:
         
-        #leg = 'Dose Rate [nSv/h]' if metric == 'Dose_Rate' else 'Gamma Count Rate [cpm]'
+        units = 'Dose Rate: nSv/h' if metric == 'Dose_Rate' else 'Counts per Minute'
 
         dff = pd.read_json(data, orient='split')
         
@@ -389,7 +390,7 @@ def display_treemap_plot(data, metric):
                         
         #dff['US'] = 'US' 
         #fig = px.treemap(dff, path=['US', 'State', 'City'], values=metric, color=metric, title = '<b> add title </b>')
-        fig = px.treemap(dff, path=['State', 'City'], values=metric, color=metric, title = '<b> Radiation Sensor Distribution Across All States</b>')
+        fig = px.treemap(dff, path=['State', 'City'], values=metric, color=metric, title = '<b> Radiation Sensor Distribution Across All States - {}</b>'.format(units))
 
         fig.update_layout(
             
