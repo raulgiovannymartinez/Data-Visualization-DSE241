@@ -117,7 +117,7 @@ def timeseries_title_buttons():
             dbc.CardBody([
                 html.Div([
                     html.Div([
-                        html.H1(children="Radiation Monitoring Time"),
+                        html.H1(children="Radiation Monitoring Time Series"),
                         html.P(
                             children="The time-series data below includes all raw data with near-real-time (per hour) measurements, \
                                 a smoothing feature is available by defining a moving average window size. There is no limit with the \
@@ -308,7 +308,8 @@ def update_city_options(data, metric, states_list):
 def display_map_plot(data, metric, groupby_value):
     if data:
         
-        xaxis = 'Dose Rate [nSv/h]' if metric == 'Dose_Rate' else 'Gamma Count Rate [cpm]'
+        units = 'Dose Rate: nSv/h' if metric == 'Dose_Rate' else 'Counts per Minute'
+        #xaxis = 'Dose Rate [nSv/h]' if metric == 'Dose_Rate' else 'Gamma Count Rate [cpm]'
 
         dff = pd.read_json(data, orient='split')
         
@@ -318,7 +319,7 @@ def display_map_plot(data, metric, groupby_value):
                 
         fig = px.scatter_geo(dff, color=metric, size=metric, range_color=[dff[metric].min(), dff[metric].max()],
                             lat = 'lat', lon = 'lng', animation_frame = groupby_value, color_continuous_scale='bluered',
-                            hover_data=['State','City'], title = '<b>Gamma Radiation Metrics by City and State</b>')
+                            hover_data=['State','City'], title = '<b>US Background Gamma Radiation - {}</b>'.format(units))
 
         fig.update_layout(
                 font_color='#f7cc00',
@@ -357,7 +358,7 @@ def display_bar_plot(data, metric):
         
         if dff.empty: raise PreventUpdate
 
-        fig = px.bar(dff, x=metric, y="City", orientation='h', title = '<b>Gamma Radiation Metrics by City and State</b>',
+        fig = px.bar(dff, x=metric, y="City", orientation='h', title = '<b>Highest Background Radiation Levels by City</b>',
                     hover_data=['State'])
 
         fig.update_layout(
