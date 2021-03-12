@@ -51,16 +51,16 @@ def main_title_buttons():
                                     Web Link: https://www.epa.gov/radnet/radnet-csv-file-downloads"),
                             html.P(
                                 children="All of the data presented here is part of the EPA's RadNet program. The RadNet program monitors \
-                                    environmental radiation in air, rain, and drinkin water. Scientist can and have used this information \
+                                    environmental radiation in air, rain, and drinking water. Scientist can and have used this information \
                                         to track variations in background radiation, atmospheric nuclear weapons, and nuclear reactor accidents."),
                             html.P('Information presented in this map is grouped by the selecion on the "Group By" option. The map and charts will \
-                                    updata accordin'),
+                                    update accordingly.'),
                         ], className="ten columns"),
                         html.Div([
                             html.Img(id="logo", src=app.get_asset_url("radiation_logo.png")),
                         ], className="two columns", style={'margin-left': '4%'}),
                         html.Div([
-                            html.P('Select Date Range:'),
+                            html.P('Select Date Range:', style={'font-weight': 'bold'}),
                             dcc.DatePickerRange(
                                 id='date-range',
                                 start_date_placeholder_text="Start Period",
@@ -74,7 +74,7 @@ def main_title_buttons():
                             )
                         ], style={'width': '21%', 'margin-left': '4%'}),
                         html.Div([
-                            html.P('Group By:'),
+                            html.P('Group By:', style={'font-weight': 'bold'}),
                             dcc.Dropdown(
                                 id="group-by",
                                 options=[
@@ -88,7 +88,7 @@ def main_title_buttons():
                             )  
                         ], className="two columns"),
                         html.Div([
-                            html.P('Select Radiation Metric:'),
+                            html.P('Select Radiation Metric:', style={'font-weight': 'bold'}),
                             dcc.Dropdown(
                                 id="metric-select",
                                 options=[
@@ -119,13 +119,18 @@ def timeseries_title_buttons():
                     html.Div([
                         html.H1(children="Radiation Monitoring Time"),
                         html.P(
-                            children="Deaths are classified using the International Classification of Diseases, \
-                            Tenth Revision (ICD–10). Drug-poisoning deaths are defined as having ICD–10 underlying \
-                            cause-of-death codes X40–X44 (unintentional), X60–X64 (suicide), X85 (homicide), or Y10–Y14 \
-                            (undetermined intent).",
+                            children="The time-series data below includes all raw data with near-real-time (per hour) measurements, \
+                                a smoothing feature is available by defining a moving average window size. There is no limit with the \
+                                number of cities to plot but please be mindful that higher latency for plotting might be experienced \
+                                as more data is requested."
                         ),
+                        html.P(
+                            children="Note: Both Date Range and Radiation Metric filters from above are applied to the visualization below."
+                        )
+                    ], className="row"),
+                    html.Div([
                         html.Div([
-                            html.P('Select States:'),
+                            html.P('Select States:', style={'font-weight': 'bold'}),
                             dcc.Dropdown(
                                 id="state-options",
                                 options=[{'label': i, 'value': i} for i in df_data.State.unique()],
@@ -135,7 +140,7 @@ def timeseries_title_buttons():
                             )  
                         ], className="three columns"),
                         html.Div([
-                            html.P('Select Cities:'),
+                            html.P('Select Cities:', style={'font-weight': 'bold'}),
                             dcc.Dropdown(
                                 id="city-options",
                                 multi=True,
@@ -145,7 +150,7 @@ def timeseries_title_buttons():
                             )  
                         ], className="four columns"),
                         html.Div([
-                            html.P('Moving Average Window Size [hours]:'),
+                            html.P('Moving Average Window Size [hours]:', style={'font-weight': 'bold'}),
                             html.Div(
                                 children=[
                                     dcc.Input(
@@ -255,6 +260,11 @@ app.layout = html.Div([
             dbc.Row([
                 dbc.Col([
                     timeseries_title_buttons(),
+                ], width=12)
+            ], align='center'),  
+            html.Br(),
+            dbc.Row([
+                dbc.Col([
                     timeseries_plot()
                 ], width=12)
             ], align='center'),  
@@ -308,12 +318,12 @@ def display_map_plot(data, metric, groupby_value):
                 
         fig = px.scatter_geo(dff, color=metric, size=metric, range_color=[dff[metric].min(), dff[metric].max()],
                             lat = 'lat', lon = 'lng', animation_frame = groupby_value, color_continuous_scale='bluered',
-                            hover_data=['State','City'])
+                            hover_data=['State','City'], title = '<b>Gamma Radiation Metrics by City and State</b>')
 
         fig.update_layout(
                 font_color='#f7cc00',
                 height=600,
-                margin={"r":5,"t":5,"l":5,"b":5},
+                margin={"r":5,"t":50,"l":5,"b":5},
                 template='plotly_dark',
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
                 paper_bgcolor= 'rgba(0, 0, 0, 0)',
@@ -342,11 +352,13 @@ def display_bar_plot(data, metric):
         
         dff = pd.read_json(data, orient='split')
         dff = dff.dropna(subset=[metric]).groupby(['City', 'State'])[metric].median()
-        dff = dff.reset_index().sort_values(by=['State', metric], ascending=[False, True])
+        # dff = dff.reset_index().sort_values(by=['State', metric], ascending=[False, True])
+        dff = dff.reset_index().sort_values(by=metric, ascending=True)
         
         if dff.empty: raise PreventUpdate
 
-        fig = px.bar(dff, x=metric, y="City", orientation='h', title = '<b>Gamma Radiation Metrics by City and State</b>', color='State')
+        fig = px.bar(dff, x=metric, y="City", orientation='h', title = '<b>Gamma Radiation Metrics by City and State</b>',
+                    hover_data=['State'])
 
         fig.update_layout(
                 legend_traceorder="reversed",
@@ -356,10 +368,11 @@ def display_bar_plot(data, metric):
                 template='plotly_dark',
                 plot_bgcolor= 'rgba(0, 0, 0, 0)',
                 paper_bgcolor= 'rgba(0, 0, 0, 0)',
-                xaxis_title= xaxis,
-                
+                xaxis_title= xaxis       
         )
         
+        fig.update_traces(marker={'color':'#f7cc00', 'line':{'color':'#808080', 'width':1.5}})
+
         fig.update_xaxes(gridcolor='#696969')
         fig.update_yaxes(showgrid=False)
         
@@ -481,7 +494,7 @@ def display_timeseries_plot(n_clicks, start_date, end_date, metric, ma_window_si
         
         dff = dff.dropna(subset=[metric])
         
-        fig = px.line(dff, x='Time', y=metric, title='<b> add title </b>', hover_name="State", color='City')
+        fig = px.line(dff, x='Time', y=metric, hover_name="State", color='City')
 
         fig.update_layout(
                 font_color='#f7cc00',
